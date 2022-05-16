@@ -3,7 +3,25 @@ import numpy as np
 
 cap=cv2.VideoCapture(0)
 
+while True:
+    _, original=cap.read()
+    hsv = cv2.cvtColor(original, cv2.COLOR_BGR2HSV)
+    azulbajito = np.array([100,100,20])
+    azulfuerte = np.array([125,255,255])
 
+    mask = cv2.inRange(hsv, azulbajito, azulfuerte)
+    res=cv2.bitwise_and(original, original, mask=mask)
+'''Aquí, el elemento central de la imagen se reemplaza por la mediana de todos los píxeles en el área del kernel.
+Esta operación procesa los bordes mientras elimina el ruido'''
+    medianb = cv2.medianBlur(res, 15)
 
-cv2.destroyAllWindows(0)
+    cv2.imshow('original', original)
+    cv2.imshow('res', res)
+    cv2.imshow('medianblur', medianb)
+
+    k = cv2.waitKey(5) & 0xFF
+    if k == 27:
+        break
+
+cv2.destroyAllWindows()
 cap.release()
